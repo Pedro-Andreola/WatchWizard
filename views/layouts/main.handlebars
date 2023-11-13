@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
+    <title>Principal</title>
+</head>
+<body>
+    {{#if log}}
+        <header class="menu">
+        
+       <a href="/"><img id="logo" src="./img/logo_wizard.png" alt="logo da marca da empresa"></a>
+        <nav>
+            <ul class="menu_itens">
+                <a href="/">Principal</a>
+                <a href="/logout">Logout</a>
+            </ul>
+        </nav>
+        <div class="icons">
+            <a href="carrinho.html"><img id="cart" src="./img/cart.png" alt="carrinho"></a>
+            <div class="profile">
+                <a href="perfil.html"> <img id="cart" src="./img/profile.png" alt="perfil"></a>
+                <br>
+                <label id="user">{{usuario}}</label>
+            </div>
+        </div>
+    </header>
+    {{else}}
+        <header class="menu">
+        
+       <a href="/"><img id="logo" src="./img/logo_wizard.png" alt="logo da marca da empresa">    </a>
+        <nav>
+            <ul class="menu_itens">
+                <a href="/">Principal</a>
+                <a href="/login">Login</a>
+            </ul>
+        </nav>
+        <div class="icons">
+            <img id="cart" src="./img/profile.png" alt="perfil"></a>
+        </div>
+    </header>
+    {{/if}} 
+    {{{body}}}
+    <footer></footer>
+</body>
+</html>
