@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const exphbs = require('express-handlebars')
 const conn = require('./db/conn')
+const bcrypt = require('bcrypt')
 const Cliente = require('./models/Cliente')
 const Produto = require('./models/Produto')
 
@@ -23,7 +24,44 @@ app.set('view engine', 'handlebars')
 /* --------------------------------------------------------- */
 
 // ===================== Acesso Cliente =======================
+app.post('/cadastro', async(req,res)=>{
+    const usuario = req.body.usuario
+    const email = req.body.email
+    const telefone = req.body.telefone
+    const cpf = req.body.cpf
+    const senha = req.body.senha
+    const tipo = 'cliente'
 
+    console.log(usuario,email,telefone,senha)
+
+    bcrypt.hash(senha, 10, async (err,hash)=>{
+        if(err){
+            console.error('Erro ao criar o hash da senha'+err)
+            res.render('home', {log, usuario, tipoUsuario})
+            return
+        }
+        try{
+            await Cliente.create({usuario: usuario, email: email, telefone: telefone,cpf:cpf, senha: hash, tipo:tipo})
+            console.log('\n')
+            console.log('Senha criptografada')
+            console.log('\n')
+
+            log = true
+
+            const pesq = await Cliente.findOne({ raw: true, where:{ usuario:usuario, senha: hash}})
+            console.log(pesq)
+
+            res.render('home', {log, usuario, tipoUsuario})
+        }catch(error){
+            console.error('Erro ao criar a senha',error)
+            res.render('home', {log, usuario, tipoUsuario})
+        }
+    })
+})
+
+app.get('/cadastro', (req,res)=>{
+    res.render('cadastro', {log, usuario, tipoUsuario})
+})
 
 app.get('/carrinho', (req,res)=>{
     res.render('carrinho', {log, usuario, tipoUsuario})
@@ -122,46 +160,56 @@ app.post('/login', async (req,res)=>{
     const email = req.body.email
     const senha = req.body.senha
     console.log(email,senha)
-    const pesq = await Cliente.findOne({raw:true, where:{email:email,senha:senha}})
+    const pesq = await Cliente.findOne({raw:true, where:{email:email}})
     console.log(pesq)
     let msg = 'Usuário não Cadastrado'
     if(pesq == null){
         res.render('login', {msg})
-    }else if(email == pesq.email && senha == pesq.senha && pesq.tipo === 'admin'){
-        log = true
-        usuario = pesq.usuario
-        tipoUsuario = pesq.tipo
-        console.log(tipoUsuario)
-        res.render('gerenciador', {log, usuario, tipoUsuario})        
-    }else if(email == pesq.email && senha == pesq.senha && pesq.tipo === 'cliente'){
-        log = true
-        usuario = pesq.usuario
-        tipoUsuario = pesq.tipo
-        console.log(usuario)
-        res.render('home', {log, usuario, tipoUsuario})
         
     }else{
-        res.render('login', {msg})
+        // comparando a senha com o uso de hash
+        bcrypt.compare(senha, pesq.senha, (err,resultado)=>{
+           if(err){
+                console.error('Erro ao comparar a senha',err)
+                res.render('home', {log, usuario, tipoUsuario})
+           }else if(resultado){
+            console.log('Cliente existente')
+            if(pesq.tipo === 'admin'){
+                log = true
+                usuario = pesq.usuario
+                tipoUsuario = pesq.tipo
+                console.log(tipoUsuario)
+                res.render('gerenciador', {log, usuario, tipoUsuario})        
+            }else if(pesq.tipo === 'cliente'){
+                log = true
+                usuario = pesq.usuario
+                tipoUsuario = pesq.tipo
+                console.log(usuario)
+                res.render('home', {log, usuario, tipoUsuario})
+           }
+           }else{
+            console.log('senha incorreta')
+            res.render('home', {log, usuario, tipoUsuario})
+           }
+        })
     }
 })
 
 app.get('/login', (req,res)=>{
     log = false
     usuario = ''
-    res.render('login', {log, usuario})
+    res.render('login', {log, usuario, tipoUsuario})
 })
 
 app.get('/logout', (req,res)=>{
     log = false
     usuario = ''
-    res.render('home', {log, usuario})
+    res.render('home', {log, usuario, tipoUsuario})
 })
 
 // ==================== Rota Padrão ========================
 app.get('/', (req,res)=>{
-    log = false
-    usuario = ''
-    res.render('home', {log, usuario})
+    res.render('home', {log, usuario, tipoUsuario})
 })
 /* ------------------------------------------------- */
 conn.sync().then(()=>{
