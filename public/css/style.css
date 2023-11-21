@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&family=Mohave:wght@300&display=swap');
 
 *{
     margin: 0;
@@ -159,6 +159,34 @@ body{
     }
   }
   
+  .desc{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+  }
+  #back{
+  background-color: #5B85AA;
+  border-radius: 15px;
+  box-shadow: 8px 5px 3px black;
+  color: #DCE0D9;
+  font-size: 1rem;
+  font-weight:lighter;
+  font-family: 'Comfortaa';
+
+}
+  .desc2{
+    display: flex;
+    flex-direction:row;
+    justify-content: space-evenly;
+    align-items: center;
+
+}
 
 
 #cont1{
