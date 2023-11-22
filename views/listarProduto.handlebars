@@ -1,0 +1,24 @@
+<h1>Lista dos Produtos Cadastrados</h1>
+<br>
+<table>
+    <thead>
+        <th>Nome</th>
+        <th>Cor</th>
+        <th>Tipo</th>
+        <th>Qtde Estoque</th>
+        <th>Preço R$</th>
+        <th>Descrição</th>
+    </thead>
+    <tbody>
+    {{#each valores}}
+        <tr>
+            <td>{{this.nome}}</td>
+            <td>{{this.cor}}</td>
+            <td>{{this.tipo}}</td>
+            <td>{{this.quantidadeEstoque}}</td>
+            <td>{{this.precoUnitario}}</td>
+            <td>{{this.descricao}}</td>
+        </tr>
+    {{/each}} 
+    </tbody>
+</table>

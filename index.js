@@ -12,7 +12,7 @@ const hostname = 'localhost'
 
 let log = false
 let usuario = ''
-let tipoUsuario = ''
+let adm = false
   
 /* --------------------- Config express -------------------- */
 app.use(express.urlencoded({extended:true}))
@@ -37,7 +37,7 @@ app.post('/cadastro', async(req,res)=>{
     bcrypt.hash(senha, 10, async (err,hash)=>{
         if(err){
             console.error('Erro ao criar o hash da senha'+err)
-            res.render('home', {log, usuario, tipoUsuario})
+            res.render('home', {log, usuario, adm})
             return
         }
         try{
@@ -51,45 +51,83 @@ app.post('/cadastro', async(req,res)=>{
             const pesq = await Cliente.findOne({ raw: true, where:{ usuario:usuario, senha: hash}})
             console.log(pesq)
 
-            res.render('home', {log, usuario, tipoUsuario})
+            res.render('home', {log, usuario, adm})
         }catch(error){
             console.error('Erro ao criar a senha',error)
-            res.render('home', {log, usuario, tipoUsuario})
+            res.render('home', {log, usuario, adm})
         }
     })
 })
 
 app.get('/cadastro', (req,res)=>{
-    res.render('cadastro', {log, usuario, tipoUsuario})
+    res.render('cadastro', {log, usuario, adm})
 })
 
 app.get('/carrinho', (req,res)=>{
-    res.render('carrinho', {log, usuario, tipoUsuario})
+    res.render('carrinho', {log, usuario, adm})
 })
 
 app.get('/feminino', (req,res)=>{
-    res.render('feminino', {log, usuario, tipoUsuario})
+    res.render('feminino', {log, usuario, adm})
 })
 app.get('/masculino', (req,res)=>{
-    res.render('masculino', {log, usuario, tipoUsuario})
+    res.render('masculino', {log, usuario, adm})
 })
 
 
 // ====================== Acesso Gerente ======================
+app.post('/apagarProduto', async(req,res)=>{
+    const id = req.body.id
+    const msg = 'Dados Apagados'
+    const msgB = 'Erro ao apagar'
+    const pesq = await Produto.findOne({raw:true, where:{id:id}})
+    if(pesq != null){
+        await Produto.destroy({where:{id:id}})
+        res.render('apagarProduto', {log, usuario, adm, msg})
+    }else{
+        res.render('apagarProduto', {log, usuario, adm, msgB})
+    }
+})
+
+app.post('/consultaBProduto', async (req, res)=>{
+    const nome_produto = req.body.nome
+    console.log(nome_produto)
+    const dados = await Produto.findOne({raw:true, where: {nome:nome_produto}})
+    console.log(dados)
+    res.render('apagarProduto',{log, usuario, adm, valor:dados} )
+})
+
+app.get('/apagarProduto', (req,res)=>{
+    res.render('apagarProduto', {log, usuario, adm})
+})
 
 app.post('/editarProduto', async (req,res)=>{
+    const id = req.body.id
     const nome = req.body.nome
-    const tamanho = Number(req.body.tamanho)
     const cor = req.body.cor
     const tipo = req.body.tipo
     const quantidadeEstoque = Number(req.body.quantidadeEstoque)
     const precoUnitario = Number(req.body.precoUnitario)
     const descricao = req.body.descricao
-    console.log(nome,tamanho, cor, tipo, quantidadeEstoque, precoUnitario, descricao)
-    const dados = await Produto.findOne({raw:true, where: {nome:nome_produto}})
+    console.log(id, nome, cor, tipo, quantidadeEstoque, precoUnitario, descricao)
+    const pesq = await Produto.findOne({raw:true, where: {id:id}})
+    const dados = {
+        nome:nome,
+        cor:cor,
+        tipo:tipo,
+        quantidadeEstoque:quantidadeEstoque,
+        precoUnitario:precoUnitario,
+        descricao:descricao
+    }
+    const msg = 'Dados Alterados'
+    const msgB = 'Erro'
     console.log(dados)
-    res.redirect('/editarProduto')
-
+    if(pesq != null){
+        await Produto.update(dados, {where:{id:id}})
+        res.render('editarProduto', {log, usuario, adm, msg})
+    }else{
+        res.render('editarProduto', {log, usuario, adm, msgB})
+    }
 })
 
 app.post('/consultaProduto', async (req, res)=>{
@@ -97,35 +135,38 @@ app.post('/consultaProduto', async (req, res)=>{
     console.log(nome_produto)
     const dados = await Produto.findOne({raw:true, where: {nome:nome_produto}})
     console.log(dados)
-    res.render('editarProduto',{log, usuario, tipoUsuario, valor:dados} )
+    res.render('editarProduto',{log, usuario, adm, valor:dados} )
 })
 
 app.get('/editarProduto', (req,res)=>{
-    res.render('editarProduto', {log, usuario, tipoUsuario})
+    res.render('editarProduto', {log, usuario, adm})
 })
 
 app.get('/listarProduto', async (req,res)=>{
     const dados = await Produto.findAll({raw:true})
     console.log(dados)
-    res.render('listarProduto', {log, usuario, tipoUsuario, valores:dados})
+    res.render('listarProduto', {log, usuario, adm, valores:dados})
 })
 
 app.post('/cadastrarProduto', async (req,res)=>{
     const nome = req.body.nome
-    const tamanho = req.body.tamanho
     const cor = req.body.cor
     const tipo = req.body.tipo
     const quantidadeEstoque = req.body.quantidadeEstoque
     const precoUnitario = req.body.precoUnitario
     const descricao = req.body.descricao
-    console.log(nome,tamanho, cor, tipo, quantidadeEstoque, precoUnitario, descricao)
-    await Produto.create({nome:nome, tamanho:tamanho, cor: cor, tipo: tipo, quantidadeEstoque: quantidadeEstoque, precoUnitario: precoUnitario, descricao: descricao})
+    console.log(nome, cor, tipo, quantidadeEstoque, precoUnitario, descricao)
+    await Produto.create({nome:nome, cor: cor, tipo: tipo, quantidadeEstoque: quantidadeEstoque, precoUnitario: precoUnitario, descricao: descricao})
     let msg = 'Dados Cadastrados'
-    res.render('cadastrarProduto', {log, usuario, tipoUsuario})
+    res.render('cadastrarProduto', {log, usuario, adm, msg})
 })
 
 app.get('/cadastrarProduto', (req,res)=>{
-    res.render('cadastrarProduto', {log, usuario, tipoUsuario})
+    res.render('cadastrarProduto', {log, usuario, adm})
+})
+
+app.get('/gerenciador', (req,res)=>{
+    res.render('gerenciador', {log, usuario, adm})    
 })
 
 // ===================== Compra/Carrinho ========================
@@ -171,25 +212,25 @@ app.post('/login', async (req,res)=>{
         bcrypt.compare(senha, pesq.senha, (err,resultado)=>{
            if(err){
                 console.error('Erro ao comparar a senha',err)
-                res.render('home', {log, usuario, tipoUsuario})
+                res.render('home', {log, usuario, adm})
            }else if(resultado){
             console.log('Cliente existente')
             if(pesq.tipo === 'admin'){
                 log = true
                 usuario = pesq.usuario
-                tipoUsuario = pesq.tipo
-                console.log(tipoUsuario)
-                res.render('gerenciador', {log, usuario, tipoUsuario})        
+                adm = true
+                console.log(adm)
+                res.render('gerenciador', {log, usuario, adm})        
             }else if(pesq.tipo === 'cliente'){
                 log = true
                 usuario = pesq.usuario
-                tipoUsuario = pesq.tipo
+                adm = false
                 console.log(usuario)
-                res.render('home', {log, usuario, tipoUsuario})
+                res.render('home', {log, usuario, adm})
            }
            }else{
             console.log('senha incorreta')
-            res.render('home', {log, usuario, tipoUsuario})
+            res.render('home', {log, usuario, adm})
            }
         })
     }
@@ -198,18 +239,18 @@ app.post('/login', async (req,res)=>{
 app.get('/login', (req,res)=>{
     log = false
     usuario = ''
-    res.render('login', {log, usuario, tipoUsuario})
+    res.render('login', {log, usuario, adm})
 })
 
 app.get('/logout', (req,res)=>{
     log = false
     usuario = ''
-    res.render('home', {log, usuario, tipoUsuario})
+    res.render('home', {log, usuario, adm})
 })
 
 // ==================== Rota Padrão ========================
 app.get('/', (req,res)=>{
-    res.render('home', {log, usuario, tipoUsuario})
+    res.render('home', {log, usuario, adm})
 })
 /* ------------------------------------------------- */
 conn.sync().then(()=>{

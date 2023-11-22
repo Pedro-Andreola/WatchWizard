@@ -5,9 +5,6 @@ const Produto = db.define('produto',{
     nome: {
         type: DataTypes.STRING(75)
     },
-    tamanho:{
-        type: DataTypes.INTEGER
-    },
     cor:{
         type: DataTypes.STRING(50)
     },

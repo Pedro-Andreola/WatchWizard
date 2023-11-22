@@ -202,7 +202,7 @@ body{
 }
 
 #cont2{
-    background-image: linear-gradient(#748c8c, #d8dae6, #748c8c00, #d8dae6, #748c8c);
+    background-image: linear-gradient(#476596, #DCE0D9, #DCE0D9, #476596);
     border-radius: 5rem;
     background-size: 0 100%;
     background-repeat: no-repeat;
@@ -214,6 +214,45 @@ body{
     background-size: 100% 100%;
 }
 
+input{
+  background-color: #5B85AA;
+  color: #DCE0D9;
+  border: 2px solid #000;
+  border-radius: 25px;
+  padding-left: 3px;
+}
+
+input::placeholder{
+  color: #DCE0D9;
+}
+
+button{
+  border-radius: 35px;
+  padding: 3px;
+  background-color: #176087;
+  color: #FFF;
+  border: 2px solid #090C02;
+}
+
+button:hover{
+  background-color: #FFF;
+  color: #176087;
+  transition: 500ms;
+}
+
+button a{
+  color: #FFF;
+  text-decoration: none;
+}
+button a:hover{
+  color: #176087;
+  transition: 500ms;
+}
+
+table, td, th{
+  border: #090C02 1px solid;
+  border-collapse: collapse;
+}
 
 /* ----------------footer------------------ */
 
