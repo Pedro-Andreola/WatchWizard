@@ -1,0 +1,27 @@
+li{
+    border: 2px solid #5B85AA;
+    list-style: none;
+}
+
+.box{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.prod{
+    display: flex;
+    width: 430px;
+    margin: 5px;
+    flex-direction: column;
+}
+
+.prod li{
+    margin: 15px;
+
+}
+
+.item{
+    width: 396px;
+    border-radius: 25px;
+}

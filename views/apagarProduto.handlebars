@@ -1,9 +1,11 @@
+<div class="tela">
 <h2>Consulta do produto atual</h2>
 <form action="/consultaBProduto" method="post">
     <label for="nome">Nome do Produto:</label><br>
     <input type="text" name="nome" placeholder="Nome do Relógio"><br>
     <br>
     <button type="submit">Enviar</button>
+</div>
 </form>
 <br>
 <table>
@@ -17,19 +19,20 @@
         <th>Descrição</th>
     </thead>
     <tbody>
-   {{#if valor}}
+   {{#each dados}}
         <tr>
-            <td>{{valor.id}}</td>
-            <td>{{valor.nome}}</td>
-            <td>{{valor.cor}}</td>
-            <td>{{valor.tipo}}</td>
-            <td>{{valor.quantidadeEstoque}}</td>
-            <td>{{valor.precoUnitario}}</td>
-            <td>{{valor.descricao}}</td>
+            <td>{{this.id}}</td>
+            <td>{{this.nome}}</td>
+            <td>{{this.cor}}</td>
+            <td>{{this.tipo}}</td>
+            <td>{{this.quantidadeEstoque}}</td>
+            <td>{{this.precoUnitario}}</td>
+            <td>{{this.descricao}}</td>
         </tr>
-    {{/if}}
+    {{/each}}
     </tbody>
 </table>
+<div class="tela">
 <br>
 <h2>Exclusão do Produto</h2>
 <br>
@@ -45,3 +48,4 @@
 {{#if msgB}}
     <p>{{msgB}}</p>
 {{/if}} 
+</div>

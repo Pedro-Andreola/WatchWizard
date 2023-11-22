@@ -24,6 +24,54 @@ app.set('view engine', 'handlebars')
 /* --------------------------------------------------------- */
 
 // ===================== Acesso Cliente =======================
+app.post('/perfil', async(req,res)=>{
+    const nome = req.body.usuario
+    const senha = req.body.senha
+    const msg = 'Informações Atualizadas'
+    const msgB = 'Erro ao atualizar'
+    const pesq = await Cliente.findOne({raw:true, where:{usuario:usuario}})
+    console.log(pesq)
+    // const email = pesq.email
+    // const telefone = pesq.telefone
+    // const cpf = pesq.cpf
+    // const tipo = pesq.tipo
+    
+    if((pesq != null)&&(nome != '')&&(senha != '')){
+        bcrypt.hash(senha, 10, async (err,hash)=>{
+            if(err){
+                console.error('Erro ao criar o hash da senha'+err)
+                res.render('perfil', {log, usuario, adm, msgB})
+                return
+            }
+            try{
+                const dados ={
+                    usuario:nome,
+                    senha:hash
+                }
+                console.log(dados)
+                await Cliente.update(dados, {where:{usuario:usuario}})
+    
+                const pesq = await Cliente.findOne({ raw: true, where:{ usuario:nome, senha: hash}})
+                console.log(pesq)
+                log = true
+                usuario = nome
+    
+    
+                res.render('perfil', {log, usuario, adm, msg})
+            }catch(error){
+                console.error('Erro ao criar a senha',error)
+                res.render('perfil', {log, usuario, adm, msgB})
+            }
+        })
+    }else{
+        res.render('perfil', {log, usuario, adm, msgB})
+    }
+})
+
+app.get('/perfil', (req,res)=>{
+    res.render('perfil', {log, usuario, adm})
+})
+
 app.post('/cadastro', async(req,res)=>{
     const usuario = req.body.usuario
     const email = req.body.email
@@ -41,7 +89,7 @@ app.post('/cadastro', async(req,res)=>{
             return
         }
         try{
-            await Cliente.create({usuario: usuario, email: email, telefone: telefone,cpf:cpf, senha: hash, tipo:tipo})
+            await Cliente.create({usuario: usuario, email: email, telefone: telefone,cpf:cpf, senha: hash, tipo:tipo, where:{usuario:usuario}})
             console.log('\n')
             console.log('Senha criptografada')
             console.log('\n')
@@ -67,11 +115,9 @@ app.get('/carrinho', (req,res)=>{
     res.render('carrinho', {log, usuario, adm})
 })
 
-app.get('/feminino', (req,res)=>{
-    res.render('feminino', {log, usuario, adm})
-})
-app.get('/masculino', (req,res)=>{
-    res.render('masculino', {log, usuario, adm})
+app.get('/produtos', async(req,res)=>{
+    const dados = await Produto.findAll({raw:true})
+    res.render('produtos', {log, usuario, adm, dados})
 })
 
 
@@ -92,9 +138,9 @@ app.post('/apagarProduto', async(req,res)=>{
 app.post('/consultaBProduto', async (req, res)=>{
     const nome_produto = req.body.nome
     console.log(nome_produto)
-    const dados = await Produto.findOne({raw:true, where: {nome:nome_produto}})
+    const dados = await Produto.findAll({raw:true, where: {nome:nome_produto}})
     console.log(dados)
-    res.render('apagarProduto',{log, usuario, adm, valor:dados} )
+    res.render('apagarProduto',{log, usuario, adm, dados} )
 })
 
 app.get('/apagarProduto', (req,res)=>{
@@ -133,13 +179,19 @@ app.post('/editarProduto', async (req,res)=>{
 app.post('/consultaProduto', async (req, res)=>{
     const nome_produto = req.body.nome
     console.log(nome_produto)
-    const dados = await Produto.findOne({raw:true, where: {nome:nome_produto}})
+    const dados = await Produto.findAll({raw:true, where: {nome:nome_produto}})
     console.log(dados)
-    res.render('editarProduto',{log, usuario, adm, valor:dados} )
+    res.render('editarProduto',{log, usuario, adm, dados} )
 })
 
 app.get('/editarProduto', (req,res)=>{
     res.render('editarProduto', {log, usuario, adm})
+})
+
+app.get('/listarCliente', async (req,res)=>{
+    const dados = await Cliente.findAll({raw:true})
+    console.log(dados)
+    res.render('listarCliente', {log, usuario, adm, dados})
 })
 
 app.get('/listarProduto', async (req,res)=>{
@@ -156,9 +208,13 @@ app.post('/cadastrarProduto', async (req,res)=>{
     const precoUnitario = req.body.precoUnitario
     const descricao = req.body.descricao
     console.log(nome, cor, tipo, quantidadeEstoque, precoUnitario, descricao)
-    await Produto.create({nome:nome, cor: cor, tipo: tipo, quantidadeEstoque: quantidadeEstoque, precoUnitario: precoUnitario, descricao: descricao})
     let msg = 'Dados Cadastrados'
-    res.render('cadastrarProduto', {log, usuario, adm, msg})
+    if((quantidadeEstoque != '')&&(precoUnitario != '')){
+        await Produto.create({nome:nome, cor: cor, tipo: tipo, quantidadeEstoque: quantidadeEstoque, precoUnitario: precoUnitario, descricao: descricao})
+        res.render('cadastrarProduto', {log, usuario, adm, msg})
+    }else{
+        res.render('cadastrarProduto', {log, usuario, adm, msgB})
+    }
 })
 
 app.get('/cadastrarProduto', (req,res)=>{
