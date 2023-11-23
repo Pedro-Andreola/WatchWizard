@@ -1,0 +1,6 @@
+id;usuario;email;telefone;cpf ;senha;tipo
+1;Lucas;lucas.itapema@gmail.com;(47)9277-0563;132.360.699-88;$2b$10$m8TVFWi.p8JBHHrJf8OIsO1l/6za1DjaD/lRHFeakvnHj/cyF08zy;cliente
+2;Pedro;pedro@gmail.com;(47)99242-1208;043.807.760-18;$2b$10$dppMWdoabdF3V6psMK1tz.gAp99w.HGwapoZTgDUkr6JWMNOCJJAW;admin
+3;Luiz;luiz@gmail.com;(48)9999-99992;999.999.999-99;$2b$10$U/auYQxqBhfh5yVhXuDv8ODMgyCUMXUPCpJdSVIfEHz7TulgOrpwa;cliente
+4;Brunno;brunno@gmail.com;(48)9919-77040;120.285.759-05;$2b$10$WN37EEcVrKNEzev3C83sSu0dGisjDPgLVxl69Mn/J9XdPGhsJFuGC;cliente
+5;Leonardo;leonardo@gmail.com;(47)9953-7978;098.948.599-41;$2b$10$uLuWlWGgeShqyBNKolJG1eIdi45Ba7GtofDoN6ctuKgCm25c/j9Eu;cliente
