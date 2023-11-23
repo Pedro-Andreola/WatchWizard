@@ -105,22 +105,26 @@ header{
 .tela{
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
+  height:70vh;
 }
 .btns{
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  padding: 15px;
 }
 
 body{
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     background-color: #ebecec;
+    overflow-x: hidden;
+  }
+
+h2{
+  text-align: center;
 }
 
 .cont{
@@ -184,13 +188,14 @@ body{
     align-items: center;
     padding: 15px;
   }
-  #back{
+  .back{
   background-color: #5B85AA;
   border-radius: 15px;
   box-shadow: 8px 5px 3px black;
   color: #DCE0D9;
   font-size: 1rem;
   font-weight:lighter;
+  width: fit-content;
 }
   .desc2{
     display: flex;
@@ -268,6 +273,13 @@ table, td, th{
 
 th{
   background-color: #476596;
+  color: #ebecec;
+}
+
+table{
+  width: 80vw;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 
@@ -289,6 +301,9 @@ th{
 
 footer{
     background-color: #5B85AA;
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
 }
 
 .foot_block{

@@ -1,5 +1,7 @@
 <div class="tela">
+<div class="">
 <h2>Consulta do produto atual</h2>
+<div class="desc back">
 <form action="/consultaProduto" method="post">
     <label for="nome">Nome do Produto:</label><br>
     <input type="text" name="nome" placeholder="Nome do Relógio"><br>
@@ -7,6 +9,7 @@
     <button type="submit">Enviar</button>
 </form>
 <br>
+</div>
 </div>
 <table>
     <thead>
@@ -34,8 +37,11 @@
 </table>
 <div class="tela">
 <br>
+</div>
+<div class="">
 <h2>Atualização do Produto</h2>
 <br>
+<div class="desc back">
 <form action="/editarProduto" method="post">
     <div class="btns">
         <div>
@@ -66,4 +72,6 @@
 {{#if msgB}}
     <p>{{msgB}}</p>
 {{/if}} 
+</div>
+</div>
 </div>
